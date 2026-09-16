@@ -1,0 +1,16 @@
+{
+	"equipments": [
+		{
+			"id": "0",
+			"name": "example",
+			"type": "turbine",
+			"serialNumber": "001",
+			"location": {
+				"lat": 12,
+				"lon": 13
+			},
+			"status": "operational",
+			"installedAt": "2021-02-02"
+		}
+	]
+}
