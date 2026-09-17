@@ -20,14 +20,19 @@ export interface Equipment {
   installedAt: string;
 }
 
-export interface Request {
+export interface MaintenanceRequest {
   id: string;
   equipmentId: string;
   title: string;
   description: string;
   priority: string;
   status: string;
-  plannedAt: string;
+  plannedAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Data {
+  equipments: Equipment[];
+  requests: MaintenanceRequest[];
 }

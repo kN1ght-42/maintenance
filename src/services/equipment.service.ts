@@ -5,10 +5,10 @@ import {
   findEquipmentById,
   findIndex,
   getAllEquipments,
-  getRequestsByEquipment,
   updateEquipmentById,
 } from "../repository/equipment.repository.js";
-import type { Equipment, Request } from "../interfaces/interface.js";
+import type { Equipment, MaintenanceRequest } from "../interfaces/interface.js";
+import { getRequestsByEquipment } from "../repository/request.repository.js";
 
 export const idGenerator = () => {
   const id = randomUUID();
@@ -57,7 +57,7 @@ export const deleteById = (id: string) => {
   const requests = getRequestsByEquipment(id);
 
   const isOpenedRequests = requests.some(
-    (request: Request) =>
+    (request: MaintenanceRequest) =>
       request.status === "new" || request.status === "in_progress",
   );
 
