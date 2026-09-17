@@ -1,6 +1,6 @@
-type equipmentType = "turbine" | "inverter" | "sensor" | "substation";
+export type equipmentType = "turbine" | "inverter" | "sensor" | "substation";
 
-type equipmentStatus =
+export type equipmentStatus =
   | "operational"
   | "maintenance"
   | "fault"
@@ -9,13 +9,25 @@ type equipmentStatus =
 export interface Equipment {
   id: string;
   name: string;
-  type: equipmentType;
+  type: string;
   serialNumber: string;
   location: {
     lat: number;
     lon: number;
   };
 
-  status: equipmentStatus;
+  status: string;
   installedAt: string;
+}
+
+export interface Request {
+  id: string;
+  equipmentId: string;
+  title: string;
+  description: string;
+  priority: string;
+  status: string;
+  plannedAt: string;
+  createdAt: string;
+  updatedAt: string;
 }
