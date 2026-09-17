@@ -29,7 +29,7 @@ export const createEquipment = (req: Request, res: Response) => {
 
 export const getAllEquipments = (req: Request, res: Response) => {
   const equipments = getAll();
-  res.json(equipments);
+  return res.json(equipments);
 };
 
 export const getEquipment = (req: Request<{ id: string }>, res: Response) => {
@@ -37,7 +37,7 @@ export const getEquipment = (req: Request<{ id: string }>, res: Response) => {
 
   const equipment = getById(id);
 
-  res.json(equipment);
+  return res.json(equipment);
 };
 
 export const updateEquipment = (

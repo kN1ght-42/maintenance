@@ -45,10 +45,6 @@ export const updateEquipmentById = (
   return newEquipment;
 };
 
-export const getRequestsByEquipment = (id: string) => {
-  return data.requests.filter((request) => request.equipmentId === id);
-};
-
 export const deleteEquipmentById = (index: number) => {
   data.equipments.splice(index, 1);
 };
