@@ -7,6 +7,8 @@ import rateLimit from "express-rate-limit";
 import router from "./routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { config } from "./config.js";
+import { requestId } from "./middlewares/request-id.middleware.js";
+import { requestLogger } from "./middlewares/logging.middleware.js";
 
 const app: Express = express();
 
@@ -32,6 +34,9 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+app.use(requestId);
+app.use(requestLogger);
 
 app.use("/api", router);
 

@@ -17,4 +17,8 @@ export const config = {
   weatherApiUrl: process.env.WEATHER_API_URL || "",
 
   requestTimeoutMs: Number(process.env.REQUEST_TIMEOUT_MS) || 5000,
+
+  weatherApiUrl: process.env.WEATHER_API_URL || "",
+
+  requestTimeoutMs: Number(process.env.REQUEST_TIMEOUT_MS) || 5000,
 };
