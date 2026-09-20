@@ -1,3 +1,4 @@
+import { appError } from "../utils/appError.js";
 import type { NextFunction, Request, Response } from "express";
 import {
   isValidInstalledAt,
@@ -14,21 +15,36 @@ export const validateCreateEquipment = (
   const { name, type, serialNumber, location, status, installedAt } = req.body;
 
   if (!isValidName(name)) {
-    return res.status(400).json({
-      error: "Invalid name",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "name",
+          message: "Некорректное имя",
+        },
+      ]),
+    );
   }
 
   if (!isValidType(type)) {
-    return res.status(400).json({
-      error: "Invalid equipment type",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "type",
+          message: "Некорректный тип оборудования",
+        },
+      ]),
+    );
   }
 
   if (typeof serialNumber !== "string" || serialNumber.length === 0) {
-    return res.status(400).json({
-      error: "Invalid serialNumber",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "serialNumber",
+          message: "Некорректный серийный номер оборудования",
+        },
+      ]),
+    );
   }
 
   if (
@@ -38,21 +54,36 @@ export const validateCreateEquipment = (
     typeof location.lat !== "number" ||
     typeof location.lon !== "number"
   ) {
-    return res.status(400).json({
-      error: "Invalid location",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "location",
+          message: "Некорректные координаты",
+        },
+      ]),
+    );
   }
 
   if (!isValidStatus(status)) {
-    return res.status(400).json({
-      error: "Invalid equipment status",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "status",
+          message: "Некорректный статус",
+        },
+      ]),
+    );
   }
 
   if (!isValidInstalledAt(installedAt)) {
-    return res.status(400).json({
-      error: "Invalid installedAt",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "installedAt",
+          message: "Некорректная дата установки",
+        },
+      ]),
+    );
   }
 
   next();
@@ -79,24 +110,39 @@ export const validateEquipmentQuery = (
   const allowedOrders = ["asc", "desc"];
 
   if (type && !allowedTypes.includes(type as string)) {
-    return res.status(400).json({
-      error: "Invalid type filter",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "type",
+          message: "Некорректный тип",
+        },
+      ]),
+    );
   }
 
   if (status && !allowedStatuses.includes(status as string)) {
-    return res.status(400).json({
-      error: "Invalid status filter",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "status",
+          message: "Некорректный статус",
+        },
+      ]),
+    );
   }
 
   if (page !== undefined) {
     const pageNumber = Number(page);
 
     if (!Number.isInteger(pageNumber) || pageNumber < 1) {
-      return res.status(400).json({
-        error: "Invalid page",
-      });
+      return next(
+        appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+          {
+            field: "page",
+            message: "Некорректное значение количества страниц",
+          },
+        ]),
+      );
     }
   }
 
@@ -104,22 +150,37 @@ export const validateEquipmentQuery = (
     const limitNumber = Number(limit);
 
     if (!Number.isInteger(limitNumber) || limitNumber < 1) {
-      return res.status(400).json({
-        error: "Invalid limit",
-      });
+      return next(
+        appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+          {
+            field: "limit",
+            message: "Некорректное значение лимита данных на страницу",
+          },
+        ]),
+      );
     }
   }
 
   if (sortBy && !allowedSortFields.includes(sortBy as string)) {
-    return res.status(400).json({
-      error: "Invalid sortBy",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "sortBy",
+          message: "Некорректное значение сортировки данных",
+        },
+      ]),
+    );
   }
 
   if (order && !allowedOrders.includes(order as string)) {
-    return res.status(400).json({
-      error: "Invalid order",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "order",
+          message: "Некорректное значение порядка вывода данных",
+        },
+      ]),
+    );
   }
 
   next();
@@ -133,24 +194,39 @@ export const validateUpdateEquipment = (
   const { name, type, serialNumber, location, status, installedAt } = req.body;
 
   if (name !== undefined && !isValidName(name)) {
-    return res.status(400).json({
-      error: "Invalid name",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "name",
+          message: "Некорректное имя",
+        },
+      ]),
+    );
   }
 
   if (type !== undefined && !isValidType(type)) {
-    return res.status(400).json({
-      error: "Invalid equipment type",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "type",
+          message: "Некорректное тип",
+        },
+      ]),
+    );
   }
 
   if (
     serialNumber !== undefined &&
     (typeof serialNumber !== "string" || serialNumber.length === 0)
   ) {
-    return res.status(400).json({
-      error: "Invalid serialNumber",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "serialNumber",
+          message: "Некорректный серийный номер оборудования",
+        },
+      ]),
+    );
   }
 
   if (
@@ -160,21 +236,36 @@ export const validateUpdateEquipment = (
       typeof location.lat !== "number" ||
       typeof location.lon !== "number")
   ) {
-    return res.status(400).json({
-      error: "Invalid location",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "location",
+          message: "Некорректные координатыя",
+        },
+      ]),
+    );
   }
 
   if (status !== undefined && !isValidStatus(status)) {
-    return res.status(400).json({
-      error: "Invalid equipment status",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "status",
+          message: "Некорректный статус",
+        },
+      ]),
+    );
   }
 
   if (installedAt !== undefined && !isValidInstalledAt(installedAt)) {
-    return res.status(400).json({
-      error: "Invalid installedAt",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "installedAt",
+          message: "Некорректная дата установки",
+        },
+      ]),
+    );
   }
 
   next();

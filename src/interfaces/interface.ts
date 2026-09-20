@@ -36,3 +36,35 @@ export interface Data {
   equipments: Equipment[];
   requests: MaintenanceRequest[];
 }
+
+export interface ErrorDetail {
+  field: string;
+  message: string;
+}
+
+export type EquipmentSortField = "name" | "type" | "status" | "installedAt";
+
+export type SortOrder = "asc" | "desc";
+
+export interface EquipmentQuery {
+  type?: string;
+  status?: string;
+  page: number;
+  limit: number;
+  sortBy: EquipmentSortField;
+  order: SortOrder;
+}
+
+export type RequestSortField = "title" | "priority" | "status" | "plannedAt";
+
+export interface RequestQuery {
+  priority?: string;
+  status?: string;
+  equipmentId?: string;
+  plannedFrom?: string;
+  plannedTo?: string;
+  page: number;
+  limit: number;
+  sortBy: RequestSortField;
+  order: SortOrder;
+}

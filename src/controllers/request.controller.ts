@@ -9,7 +9,10 @@ import {
   updateStatusById,
 } from "../services/request.service.js";
 import { deleteById, idGenerator } from "../services/equipment.service.js";
-import type { MaintenanceRequest } from "../interfaces/interface.js";
+import type {
+  MaintenanceRequest,
+  RequestQuery,
+} from "../interfaces/interface.js";
 
 export const getRequestsByEquipment = (
   req: Request<{ id: string }>,
@@ -23,8 +26,48 @@ export const getRequestsByEquipment = (
 };
 
 export const getAllRequests = (req: Request, res: Response) => {
-  const requests = getAll();
-  return res.json(requests);
+  const {
+    priority,
+    status,
+    equipmentId,
+    plannedFrom,
+    plannedTo,
+    page = "1",
+    limit = "10",
+    sortBy = "title",
+    order = "asc",
+  } = req.query;
+
+  const query: RequestQuery = {
+    page: Number(page),
+    limit: Number(limit),
+    sortBy: sortBy as RequestQuery["sortBy"],
+    order: order as RequestQuery["order"],
+  };
+
+  if (priority !== undefined) {
+    query.priority = priority as string;
+  }
+
+  if (status !== undefined) {
+    query.status = status as string;
+  }
+
+  if (equipmentId !== undefined) {
+    query.equipmentId = equipmentId as string;
+  }
+
+  if (plannedFrom !== undefined) {
+    query.plannedFrom = plannedFrom as string;
+  }
+
+  if (plannedTo !== undefined) {
+    query.plannedTo = plannedTo as string;
+  }
+
+  const result = getAll(query);
+
+  return res.json(result);
 };
 
 export const createRequest = (req: Request, res: Response) => {

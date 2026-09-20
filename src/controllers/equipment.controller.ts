@@ -8,6 +8,7 @@ import {
   idGenerator,
   updateById,
 } from "../services/equipment.service.js";
+import type { EquipmentQuery } from "../interfaces/interface.js";
 
 export const createEquipment = (req: Request, res: Response) => {
   const { name, type, serialNumber, location, status, installedAt } = req.body;
@@ -28,8 +29,33 @@ export const createEquipment = (req: Request, res: Response) => {
 };
 
 export const getAllEquipments = (req: Request, res: Response) => {
-  const equipments = getAll();
-  return res.json(equipments);
+  const {
+    type,
+    status,
+    page = "1",
+    limit = "10",
+    sortBy = "name",
+    order = "asc",
+  } = req.query;
+
+  const query: EquipmentQuery = {
+    page: Number(page),
+    limit: Number(limit),
+    sortBy: sortBy as EquipmentQuery["sortBy"],
+    order: order as EquipmentQuery["order"],
+  };
+
+  if (type !== undefined) {
+    query.type = type as string;
+  }
+
+  if (status !== undefined) {
+    query.status = status as string;
+  }
+
+  const result = getAll(query);
+
+  return res.json(result);
 };
 
 export const getEquipment = (req: Request<{ id: string }>, res: Response) => {
