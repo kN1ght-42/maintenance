@@ -1,10 +1,10 @@
-import data from "../data/data.json" with { type: "json" };
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import {
   create,
   deleteById,
   getAll,
   getById,
+  getWeatherById,
   idGenerator,
   updateById,
 } from "../services/equipment.service.js";
@@ -86,4 +86,20 @@ export const deleteEquipment = (
 
   deleteById(id);
   return res.status(204).send();
+};
+
+export const getEquipmentWeather = async (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+
+    const weather = await getWeatherById(id);
+
+    return res.json(weather);
+  } catch (error) {
+    next(error);
+  }
 };

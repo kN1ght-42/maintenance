@@ -68,3 +68,18 @@ export interface RequestQuery {
   sortBy: RequestSortField;
   order: SortOrder;
 }
+
+export interface WeatherDays {
+  date: Date;
+  min: string;
+  max: string;
+  precipitation: number;
+}
+
+export interface WeatherData {
+  city: string;
+  country: string;
+  lat: number;
+  lon: number;
+  days: WeatherDays[];
+}
