@@ -36,3 +36,8 @@ export interface Data {
   equipments: Equipment[];
   requests: MaintenanceRequest[];
 }
+
+export interface ErrorDetail {
+  field: string;
+  message: string;
+}

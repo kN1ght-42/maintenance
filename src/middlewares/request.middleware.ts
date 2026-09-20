@@ -6,6 +6,7 @@ import {
   isValidRequestStatus,
   isValidTitle,
 } from "../utils/validators.js";
+import { appError } from "../utils/appError.js";
 
 export const validateCreateRequest = (
   req: Request,
@@ -15,33 +16,58 @@ export const validateCreateRequest = (
   const { title, description, equipmentId, priority, plannedAt } = req.body;
 
   if (!isValidTitle(title)) {
-    return res.status(400).json({
-      error: "Invalid title",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "title",
+          message: "Некорректный заголовок",
+        },
+      ]),
+    );
   }
 
   if (description !== undefined && !isValidDescription(description)) {
-    return res.status(400).json({
-      error: "Invalid description",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "description",
+          message: "Некорректное описание",
+        },
+      ]),
+    );
   }
 
   if (equipmentId === undefined || typeof equipmentId !== "string") {
-    return res.status(400).json({
-      error: "Invalid equipmentId",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "equipmentId",
+          message: "Некорректный идентификатор оборудования",
+        },
+      ]),
+    );
   }
 
   if (!isValidPriority(priority)) {
-    return res.status(400).json({
-      error: "Invalid request priority",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "priority",
+          message: "Некорректный приоритет",
+        },
+      ]),
+    );
   }
 
   if (plannedAt !== undefined && !isValidPlannedAt(plannedAt)) {
-    return res.status(400).json({
-      error: "Invalid plannedAt",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "plannedAt",
+          message: "Некорректная дата планирования",
+        },
+      ]),
+    );
   }
 
   next();
@@ -70,33 +96,58 @@ export const validateRequestQuery = (
   const allowedOrders = ["asc", "desc"];
 
   if (priority && !allowedPriorities.includes(priority as string)) {
-    return res.status(400).json({
-      error: "Invalid priority filter",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "priority",
+          message: "Некорректный приоритет",
+        },
+      ]),
+    );
   }
 
   if (status && !allowedStatuses.includes(status as string)) {
-    return res.status(400).json({
-      error: "Invalid status filter",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "status",
+          message: "Некорректный статус",
+        },
+      ]),
+    );
   }
 
   if (equipmentId !== undefined && typeof equipmentId !== "string") {
-    return res.status(400).json({
-      error: "Invalid equipmentId filter",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "equipmentId",
+          message: "Некорректный идентификатор оборудования",
+        },
+      ]),
+    );
   }
 
   if (plannedFrom !== undefined && !isValidPlannedAt(plannedFrom)) {
-    return res.status(400).json({
-      error: "Invalid plannedFrom",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "plannedFrom",
+          message: "Некорректная дата фильтра 'от'",
+        },
+      ]),
+    );
   }
 
   if (plannedTo !== undefined && !isValidPlannedAt(plannedTo)) {
-    return res.status(400).json({
-      error: "Invalid plannedTo",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "plannedTo",
+          message: "Некорректная дата фильтра 'до'",
+        },
+      ]),
+    );
   }
 
   if (
@@ -104,18 +155,28 @@ export const validateRequestQuery = (
     plannedTo !== undefined &&
     new Date(plannedFrom as string) > new Date(plannedTo as string)
   ) {
-    return res.status(400).json({
-      error: "plannedFrom cannot be greater than plannedTo",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "plannedFrom/plannedTo",
+          message: "Некорректный диапазон дат",
+        },
+      ]),
+    );
   }
 
   if (page !== undefined) {
     const pageNumber = Number(page);
 
     if (!Number.isInteger(pageNumber) || pageNumber < 1) {
-      return res.status(400).json({
-        error: "Invalid page",
-      });
+      return next(
+        appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+          {
+            field: "page",
+            message: "Некорректное значение количества страниц",
+          },
+        ]),
+      );
     }
   }
 
@@ -123,22 +184,37 @@ export const validateRequestQuery = (
     const limitNumber = Number(limit);
 
     if (!Number.isInteger(limitNumber) || limitNumber < 1) {
-      return res.status(400).json({
-        error: "Invalid limit",
-      });
+      return next(
+        appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+          {
+            field: "limit",
+            message: "Некорректное значение лимита данных на страницу",
+          },
+        ]),
+      );
     }
   }
 
   if (sortBy && !allowedSortFields.includes(sortBy as string)) {
-    return res.status(400).json({
-      error: "Invalid sortBy",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "sortBy",
+          message: "Некорректное значение сортировки данных",
+        },
+      ]),
+    );
   }
 
   if (order && !allowedOrders.includes(order as string)) {
-    return res.status(400).json({
-      error: "Invalid order",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "order",
+          message: "Некорректное значение порядка вывода данных",
+        },
+      ]),
+    );
   }
 
   next();
@@ -152,27 +228,47 @@ export const validateUpdateRequest = (
   const { title, description, priority, plannedAt } = req.body;
 
   if (title !== undefined && !isValidTitle(title)) {
-    return res.status(400).json({
-      error: "Invalid title",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "title",
+          message: "Некорректный заголовок",
+        },
+      ]),
+    );
   }
 
   if (description !== undefined && !isValidDescription(description)) {
-    return res.status(400).json({
-      error: "Invalid description",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "description",
+          message: "Некорректное описание",
+        },
+      ]),
+    );
   }
 
   if (priority !== undefined && !isValidPriority(priority)) {
-    return res.status(400).json({
-      error: "Invalid request priority",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "priority",
+          message: "Некорректный приоритет",
+        },
+      ]),
+    );
   }
 
   if (plannedAt !== undefined && !isValidPlannedAt(plannedAt)) {
-    return res.status(400).json({
-      error: "Invalid plannedAt",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "plannedAt",
+          message: "Некорректная дата планирования",
+        },
+      ]),
+    );
   }
 
   next();
@@ -186,9 +282,14 @@ export const validateStatus = (
   const { status } = req.body;
 
   if (!isValidRequestStatus(status)) {
-    return res.status(400).json({
-      error: "Invalid request status",
-    });
+    return next(
+      appError(400, "VALIDATION_ERROR", "Некорректные данные запроса", [
+        {
+          field: "status",
+          message: "Некорректный статус",
+        },
+      ]),
+    );
   }
 
   next();
