@@ -2,7 +2,9 @@ import type { MaintenanceRequest } from "../interfaces/interface.js";
 import { findEquipmentById } from "../repository/equipment.repository.js";
 import {
   createRequest,
+  deleteRequestById,
   findIndex,
+  findRequestById,
   getAllRequests,
   getRequestsByEquipment,
   updateRequestById,
@@ -34,7 +36,7 @@ export const create = (request: MaintenanceRequest) => {
 };
 
 export const getById = (id: string) => {
-  const request = findEquipmentById(id);
+  const request = findRequestById(id);
 
   if (!request) {
     throw new Error("Request not found");
@@ -57,11 +59,46 @@ export const updateById = (
 };
 
 export const updateStatusById = (id: string, status: string) => {
+  const requestIndex = findIndex(id);
+
+  if (requestIndex === -1) {
+    throw new Error("Request not found");
+  }
+
+  const currentStatus = findRequestById(id)?.status;
+
+  switch (status) {
+    case "new":
+      throw new Error("This status can't be switched on current");
+
+    case "in_progress":
+      if (currentStatus !== "new") {
+        throw new Error("This status can't be switched on current");
+      }
+      break;
+
+    case "done":
+      if (currentStatus !== "in_progress") {
+        throw new Error("This status can't be switched on current");
+      }
+      break;
+
+    case "rejected":
+      if (currentStatus !== "new" && currentStatus !== "in_progress") {
+        throw new Error("This status can't be switched on current");
+      }
+      break;
+  }
+
+  return updateRequestStatusById(requestIndex, status);
+};
+
+export const deleteById = (id: string) => {
   let requestIndex = findIndex(id);
 
   if (requestIndex === -1) {
     throw new Error("Request not found");
   }
 
-  return updateRequestStatusById(requestIndex, status);
+  return deleteRequestById(requestIndex);
 };
