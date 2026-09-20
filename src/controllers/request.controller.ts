@@ -8,7 +8,7 @@ import {
   updateById,
   updateStatusById,
 } from "../services/request.service.js";
-import { idGenerator } from "../services/equipment.service.js";
+import { deleteById, idGenerator } from "../services/equipment.service.js";
 import type { MaintenanceRequest } from "../interfaces/interface.js";
 
 export const getRequestsByEquipment = (
@@ -71,5 +71,12 @@ export const updateStatus = (req: Request<{ id: string }>, res: Response) => {
 
   updateStatusById(id, status);
 
+  return res.status(204).send();
+};
+
+export const deleteRequest = (req: Request<{ id: string }>, res: Response) => {
+  const id = req.params.id;
+
+  deleteById(id);
   return res.status(204).send();
 };

@@ -4,7 +4,7 @@ import { createCurrentDate } from "../services/request.service.js";
 
 const typedData = data as Data;
 
-export const findEquipmentById = (id: string) => {
+export const findRequestById = (id: string) => {
   return typedData.requests.find((request) => request.id === id);
 };
 
@@ -50,7 +50,7 @@ export const updateRequestById = (
 };
 
 export const updateRequestStatusById = (index: number, status: string) => {
-  let oldRequest = data.requests[index];
+  const oldRequest = data.requests[index];
 
   if (!oldRequest) {
     throw new Error("Request not found");
@@ -59,9 +59,14 @@ export const updateRequestStatusById = (index: number, status: string) => {
   const newRequest: MaintenanceRequest = {
     ...oldRequest,
     status: status,
+    updatedAt: createCurrentDate(),
   };
 
   typedData.requests[index] = newRequest;
 
   return newRequest;
+};
+
+export const deleteRequestById = (index: number) => {
+  typedData.requests.splice(index, 1);
 };
