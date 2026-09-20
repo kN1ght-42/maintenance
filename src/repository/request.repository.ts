@@ -32,7 +32,7 @@ export const updateRequestById = (
     Pick<MaintenanceRequest, "title" | "description" | "priority" | "plannedAt">
   >,
 ): MaintenanceRequest => {
-  const oldRequest = data.requests[index];
+  const oldRequest = typedData.requests[index];
 
   if (!oldRequest) {
     throw new Error("Request not found");
@@ -50,7 +50,7 @@ export const updateRequestById = (
 };
 
 export const updateRequestStatusById = (index: number, status: string) => {
-  const oldRequest = data.requests[index];
+  const oldRequest = typedData.requests[index];
 
   if (!oldRequest) {
     throw new Error("Request not found");
